@@ -16,7 +16,33 @@ app.use(session({
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static('public'));
+
+// Serve static files with proper cache headers for PWA
+app.use(express.static('public', {
+  setHeaders: (res, path) => {
+    // Cache static assets for 1 year
+    if (path.endsWith('.css') || path.endsWith('.js') || path.endsWith('.png') || path.endsWith('.jpg') || path.endsWith('.ico')) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000');
+    }
+    // Cache manifest and service worker for shorter time
+    if (path.endsWith('manifest.json') || path.endsWith('service-worker.js')) {
+      res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+    }
+  }
+}));
+
+// Serve manifest.json with correct MIME type
+app.get('/manifest.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/manifest+json');
+  res.sendFile(path.join(__dirname, 'public', 'manifest.json'));
+});
+
+// Serve service worker with correct MIME type
+app.get('/service-worker.js', (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript');
+  res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+  res.sendFile(path.join(__dirname, 'public', 'service-worker.js'));
+});
 
 // Routes
 app.get('/', (req, res) => {

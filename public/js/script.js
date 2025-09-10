@@ -1,5 +1,36 @@
 // Form validation and enhanced mobile experience
 document.addEventListener('DOMContentLoaded', function() {
+    // Register service worker for PWA functionality
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then((registration) => {
+                    console.log('✅ Service Worker registered successfully:', registration.scope);
+                })
+                .catch((error) => {
+                    console.log('❌ Service Worker registration failed:', error);
+                });
+        });
+    }
+
+    // Handle PWA install prompt
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        console.log('💡 PWA install prompt available');
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // Show custom install button if you want
+        // showInstallButton();
+    });
+
+    // Handle PWA install completion
+    window.addEventListener('appinstalled', (evt) => {
+        console.log('🎉 PWA was installed successfully');
+        // Hide install button if shown
+        // hideInstallButton();
+    });
+
     const form = document.getElementById('transactionForm');
     
     // Load Nigerian banks
