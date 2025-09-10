@@ -31,6 +31,37 @@ document.addEventListener('DOMContentLoaded', function() {
         // hideInstallButton();
     });
 
+    // Register service worker for PWA functionality
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then((registration) => {
+                    console.log('✅ Service Worker registered successfully:', registration.scope);
+                })
+                .catch((error) => {
+                    console.log('❌ Service Worker registration failed:', error);
+                });
+        });
+    }
+
+    // Handle PWA install prompt
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        console.log('💡 PWA install prompt available');
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // Show custom install button if you want
+        // showInstallButton();
+    });
+
+    // Handle PWA install completion
+    window.addEventListener('appinstalled', (evt) => {
+        console.log('🎉 PWA was installed successfully');
+        // Hide install button if shown
+        // hideInstallButton();
+    });
+
     const form = document.getElementById('transactionForm');
     
     // Load Nigerian banks
@@ -62,21 +93,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Submit form after 3 seconds
         setTimeout(() => {
-            // Create form data and submit via fetch to handle navigation properly
-            const formData = new FormData(form);
-            fetch('/submit-transaction', {
-                method: 'POST',
-                body: formData
-            }).then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                } else {
-                    window.location.href = '/receipt';
-                }
-            }).catch(error => {
-                console.error('Form submission error:', error);
-                window.location.href = '/receipt';
-            });
+            // Submit the form normally - let Express handle the redirect
+            form.submit();
         }, 3000);
     });
     
