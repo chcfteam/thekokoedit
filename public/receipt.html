@@ -153,14 +153,7 @@
         }, 3000);
 
         function viewDetails() {
-            // Show loading overlay
-            document.getElementById('loadingOverlay').style.display = 'flex';
-            document.getElementById('receiptContent').style.display = 'none';
-            
-            // Navigate after 3 seconds
-            setTimeout(() => {
-                window.location.href = '/details';
-            }, 3000);
+            window.location.href = '/details';
         }
     </script>
 </body>

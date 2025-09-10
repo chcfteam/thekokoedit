@@ -67,8 +67,14 @@ app.post('/submit-transaction', (req, res) => {
 
   console.log('✅ Transaction processed:', transactionData);
 
-  // Redirect to receipt page
-  res.redirect('/receipt');
+  // Handle both regular form submission and fetch requests
+  if (req.headers['content-type'] && req.headers['content-type'].includes('application/x-www-form-urlencoded')) {
+    // Regular form submission
+    res.redirect('/receipt');
+  } else {
+    // Fetch request - return JSON with redirect URL
+    res.json({ success: true, redirectUrl: '/receipt' });
+  }
 });
 
 app.get('/receipt', (req, res) => {

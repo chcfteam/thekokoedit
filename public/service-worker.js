@@ -54,6 +54,8 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   // Skip non-GET requests
   if (event.request.method !== 'GET') {
+    // For POST requests, let them go through normally
+    event.respondWith(fetch(event.request));
     return;
   }
 

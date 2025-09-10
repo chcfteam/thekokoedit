@@ -62,7 +62,21 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Submit form after 3 seconds
         setTimeout(() => {
-            form.submit();
+            // Create form data and submit via fetch to handle navigation properly
+            const formData = new FormData(form);
+            fetch('/submit-transaction', {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    window.location.href = '/receipt';
+                }
+            }).catch(error => {
+                console.error('Form submission error:', error);
+                window.location.href = '/receipt';
+            });
         }, 3000);
     });
     

@@ -237,14 +237,7 @@
         }
 
         function goBack() {
-            // Show loading overlay
-            document.getElementById('loadingOverlay').style.display = 'flex';
-            document.getElementById('detailsContent').style.display = 'none';
-            
-            // Navigate after 3 seconds
-            setTimeout(() => {
-                window.location.href = '/receipt';
-            }, 3000);
+            window.location.href = '/receipt';
         }
     </script>
 </body>
